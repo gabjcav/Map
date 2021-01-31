@@ -6,16 +6,17 @@ import {
   Route
 } from 'react-router-dom';
 import Mapbox from 'mapbox-gl';
-
 import PageTitle from './components/PageTitle';
 import GlobalStyle from './components/GlobalStyle';
+import Container from './components/Container';
+
 let map = null; 
 
 function App() {
   const mapElement = useRef(null);
   Mapbox.accessToken = process.env.MAPBOX_API_KEY;
   const [pageData, setPageData] = useState(null);
-
+  const [style, setStyle] = useState('mapbox://styles/mapbox/streets-v11'); 
 
 
   //Connect to Cosmicjs
@@ -44,10 +45,10 @@ function App() {
       map = new Mapbox.Map({
         container: mapElement.current, 
         center: [10, 59],
-        zoom: 10
-    }
-    
-      )};
+        zoom: 10,
+        style: style
+      })
+    };
   }, [pageData]);
 
   function renderSkeleton() {
@@ -58,12 +59,12 @@ function App() {
 
   function renderPage() {
     return (
-      <div>
+      <Container>
         <GlobalStyle />
         <PageTitle>Welcome</PageTitle>
         <div dangerouslySetInnerHTML={{__html: pageData.content}} />
         <div className="mapContainer" style={{height: '500px'}} ref={mapElement}></div>
-      </div>
+      </Container>
     )
   }
 
