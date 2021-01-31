@@ -7,12 +7,18 @@ import {
 } from 'react-router-dom';
 import Mapbox from 'mapbox-gl';
 
+import PageTitle from './components/PageTitle';
+import GlobalStyle from './components/GlobalStyle';
 let map = null; 
 
 function App() {
-  const mapElement = useRef(null)
+  const mapElement = useRef(null);
+  Mapbox.accessToken = process.env.MAPBOX_API_KEY;
   const [pageData, setPageData] = useState(null);
 
+
+
+  //Connect to Cosmicjs
   useEffect(() => {
     const client = new Cosmic()
     const bucket = client.bucket({
@@ -31,6 +37,18 @@ function App() {
       console.log(error)
     })
   }, []);
+  
+  // Add map
+  useEffect(() => {
+    if(pageData !== null){
+      map = new Mapbox.Map({
+        container: mapElement.current, 
+        center: [10, 59],
+        zoom: 10
+    }
+    
+      )};
+  }, [pageData]);
 
   function renderSkeleton() {
     return (
@@ -41,8 +59,10 @@ function App() {
   function renderPage() {
     return (
       <div>
-        <h1>Welcome</h1>
+        <GlobalStyle />
+        <PageTitle>Welcome</PageTitle>
         <div dangerouslySetInnerHTML={{__html: pageData.content}} />
+        <div className="mapContainer" style={{height: '500px'}} ref={mapElement}></div>
       </div>
     )
   }
