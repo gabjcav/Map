@@ -39,11 +39,12 @@ const StopListContainer = () => {
         return (
           <Container as="main">
               <h2>The 5</h2>
+              <p style={{fontSize: '.8rem', color: 'gray'}}>Not in any particular order</p>
             <ul>
                 {pageData.objects.map(item => {
                     return (
                         <li>
-                            <a href={`/stop/${item.slug}`}>{item.title}</a>
+                            <div href={`/stop/${item.slug}`}>{item.title}</div>
                         </li>
                     )
                 })}

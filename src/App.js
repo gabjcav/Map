@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import GlobalStyle from './components/GlobalStyle';
 import HomeContainer from './containers/HomeContainer';
-import StopListContainer from './containers/StopListContainer';
+// import StopListContainer from './containers/StopListContainer';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         <Switch>
           <Route path="/" component={HomeContainer} />
         </Switch>
-        <StopListContainer />
+        {/* <StopListContainer /> */}
       </Router>
     </>
   )
