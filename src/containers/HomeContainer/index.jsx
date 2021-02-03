@@ -19,7 +19,7 @@ function HomeContainer() {
   const [pageData, setPageData] = useState(null);
   const [style, setStyle] = useState('mapbox://styles/mapbox/streets-v11'); 
   const [mapMarkersState, setMapMarkersState] = useState([]);
-  const [backgroundImage, setBackgroundImage] = useState('url(https://images.vexels.com/media/users/3/142675/isolated/preview/84e468a8fff79b66406ef13d3b8653e2-house-location-marker-icon-by-vexels.png)')
+  const [backgroundImage, setBackgroundImage] = useState(null)
   //Connect to Cosmicjs
   useEffect(() => {
     const client = new Cosmic()
@@ -74,16 +74,19 @@ function HomeContainer() {
       } else {
         mapMarkersState.map((item) => {
 
-        setBackgroundImage('url(' + [item.metafields[3].value] + ')')    
+        // let markerImage = ()
         
-
+        // setBackgroundImage([item.metafields[3].value]);
+        // setBackgroundImage('url(' + [item.metafields[3].value] + ')')
+            
+        
         let el = document.createElement('div');
         el.style.display = 'block';
         el.style.height = '40px';
         el.style.width = '40px';
-        el.style.backgroundImage = backgroundImage;
+        el.style.backgroundImage = 'url(' + [item.metafields[3].value] + ')';
         el.style.backgroundSize = '40px 40px'; 
-        console.log(backgroundImage)
+        console.log(el.style.backgroundImage)
         new Mapbox.Marker(el, {
             anchor: 'bottom'
         })
