@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
         width: 100%; 
         margin: 0;
         padding: 0;
-        background-color: whitesmoke; 
+        background-color: #000000; 
         
     }
 
@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        font-family: "Lato", sans-serif; 
+        font-family: "Montserrat", sans-serif; 
     }
 
     img{
@@ -29,6 +29,14 @@ const GlobalStyle = createGlobalStyle`
 
     .mapboxgl-canary{
         visibility: visible; 
+    }
+
+    .my-marker{
+        cursor:pointer;
+    }
+
+    .popup-card{
+
     }
 `
 

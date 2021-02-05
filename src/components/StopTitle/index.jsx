@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 
-const PageTitle = styled.h1`
+const StopTitle = styled.h2`
     font-size: 3rem; 
     font-weight: 900;
     margin-left: auto;
     margin-right: auto;
-    color: #FFF;
 `
 
-export default PageTitle; 
+export default StopTitle; 

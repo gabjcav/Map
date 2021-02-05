@@ -9,6 +9,8 @@ import Mapbox from 'mapbox-gl';
 import PageTitle from '../../components/PageTitle';
 import Container from '../../components/Container';
 import SkeletonContainer from '../SkeletonContainer';
+import InfoContainer from '../../components/InfoContainer';
+import HomeContent from '../../components/HomeContent';
 let map = null; 
 let marker = null;
 
@@ -16,10 +18,13 @@ let marker = null;
 function HomeContainer() {
   const mapElement = useRef(null);
   Mapbox.accessToken = process.env.MAPBOX_API_KEY;
+
+  //States
   const [pageData, setPageData] = useState(null);
   const [style, setStyle] = useState('mapbox://styles/mapbox/streets-v11'); 
   const [mapMarkersState, setMapMarkersState] = useState([]);
-  const [backgroundImage, setBackgroundImage] = useState(null)
+  const [infoContent, setInfoContent] = useState(null);
+  const [stop, setStop] = useState(null);
   //Connect to Cosmicjs
   useEffect(() => {
     const client = new Cosmic()
@@ -30,7 +35,7 @@ function HomeContainer() {
 
     bucket.getObject({
       slug: 'my-top-5-places-to-travel',
-      props: 'slug,title,content,metafields'
+      props: 'slug,title,content,metadata'
     })
 
     .then(data => {
@@ -42,7 +47,7 @@ function HomeContainer() {
 
     bucket.getObjects({
         type:'stops',
-        props: 'slug,title,content,metafields'
+        props: 'slug,title,content,metadata'
     })
 
     .then((data) => {
@@ -72,30 +77,45 @@ function HomeContainer() {
       if(mapMarkersState === null){
           return;
       } else {
-        mapMarkersState.map((item) => {
-
-        // let markerImage = ()
         
-        // setBackgroundImage([item.metafields[3].value]);
-        // setBackgroundImage('url(' + [item.metafields[3].value] + ')')
-            
+        mapMarkersState.map((item) => {
         
         let el = document.createElement('div');
+        el.className = 'my-marker'
+        el.setAttribute('data-name', `${item.title}`)
         el.style.display = 'block';
-        el.style.height = '40px';
-        el.style.width = '40px';
-        el.style.backgroundImage = 'url(' + [item.metafields[3].value] + ')';
-        el.style.backgroundSize = '40px 40px'; 
-        console.log(el.style.backgroundImage)
-        new Mapbox.Marker(el, {
-            anchor: 'bottom'
+        el.style.height = '50px';
+        el.style.width = '50px';
+        el.style.pointer = 'clicker';
+        el.style.backgroundImage = `url('${item.metadata.contentimage.imgix_url}')`;
+        el.style.backgroundSize = '50px 50px'; 
+
+        el.addEventListener('click', function() {
+          let selectedStop = el.getAttribute('data-name');
+          let stopToPass = mapMarkersState.find((el) => el.title === selectedStop);
+          setStop(stopToPass);
         })
-            .setLngLat([item.metafields[0].value, item.metafields[1].value])
-            .addTo(map)
+
+        console.log(item.content)
+
+        setInfoContent(item.content)
+
+        let popUpCard = `
+					<div class="popup-card">
+					<h2>${item.title}</h2>
+					<p>${item.content}</p>
+				
+					</div>`
+        
+        new Mapbox.Marker(el, {
+          anchor: 'bottom'
+        })
+          .setLngLat([item.metadata.longitude, item.metadata.latitude])
+          .setPopup(new Mapbox.Popup().setHTML(popUpCard))
+          .addTo(map)
         })
       }
   }, [mapMarkersState])
-  
   
 
   function renderSkeleton() {
@@ -108,8 +128,10 @@ function HomeContainer() {
     return (
       <Container>
         <PageTitle>Welcome</PageTitle>
-        <div dangerouslySetInnerHTML={{__html: pageData.content}} />
+        <HomeContent dangerouslySetInnerHTML={{__html: pageData.content}} />
         <div className="mapContainer" style={{height: '500px'}} ref={mapElement}></div>
+        {/* {infoContent && <InfoContainer dangerouslySetInnerHTML={{__html: infoContent}} />} */}
+        
       </Container>
     )
   }
