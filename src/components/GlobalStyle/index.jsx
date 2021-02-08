@@ -36,8 +36,27 @@ const GlobalStyle = createGlobalStyle`
     }
 
     .popup-card{
-
+        font-size: .3rem
+        font-family: 'Montserrat', sans-serif;
+        position: relative;
+        h2{
+            font-size: 24px;
+        }
+        p{
+            font-size: 16px;
+        }
     }
+      
+    .weather-container{
+        background-color: red;
+        font-size: 1rem;
+        .weather-temp{
+        
+        }
+    }
+
+    
+
 `
 
 export default GlobalStyle; 

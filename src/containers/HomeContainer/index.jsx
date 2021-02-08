@@ -5,26 +5,29 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
-import Mapbox from 'mapbox-gl';
+import Mapbox, { accessToken } from 'mapbox-gl';
 import PageTitle from '../../components/PageTitle';
 import Container from '../../components/Container';
 import SkeletonContainer from '../SkeletonContainer';
 import InfoContainer from '../../components/InfoContainer';
 import HomeContent from '../../components/HomeContent';
+import WeatherContainer from '../../components/WeatherContainer';
 let map = null; 
 let marker = null;
-
-
+let weatherKey = process.env.WEATHERSTACK_API_KEY;
 function HomeContainer() {
   const mapElement = useRef(null);
   Mapbox.accessToken = process.env.MAPBOX_API_KEY;
 
   //States
   const [pageData, setPageData] = useState(null);
-  const [style, setStyle] = useState('mapbox://styles/mapbox/streets-v11'); 
+  const [style, setStyle] = useState('mapbox://styles/gabcav/ckkvcl1ln3yz917ly1fduv8qg'); 
   const [mapMarkersState, setMapMarkersState] = useState([]);
   const [infoContent, setInfoContent] = useState(null);
   const [stop, setStop] = useState(null);
+  const [weatherData, setWeatherData] = useState([]);
+
+  
   //Connect to Cosmicjs
   useEffect(() => {
     const client = new Cosmic()
@@ -74,7 +77,7 @@ function HomeContainer() {
   //Add markers to map
 
   useEffect(() => {
-      if(mapMarkersState === null){
+      if(!mapMarkersState || !map || weatherData.length === 0){
           return;
       } else {
         
@@ -96,28 +99,53 @@ function HomeContainer() {
           setStop(stopToPass);
         })
 
-        console.log(item.content)
-
         setInfoContent(item.content)
+
+        var weather = weatherData.filter(p => p.slug === item.slug)[0];
 
         let popUpCard = `
 					<div class="popup-card">
-					<h2>${item.title}</h2>
-					<p>${item.content}</p>
-				
+            <h2>${item.title}</h2>
+            <p>${item.content}</p>
+            <img src=${item.metadata.infoimage.imgix_url}/>
+            <div class"weather-container">
+              <h3>Current Weather (${weather?.location?.name})</h3>
+              <p class="weather-temp">${weather?.current?.temperature}°c</p>
+              <p class="weather-desc">${weather?.current?.weather_descriptions}</p>
+            </div>  
 					</div>`
-        
+
         new Mapbox.Marker(el, {
           anchor: 'bottom'
         })
           .setLngLat([item.metadata.longitude, item.metadata.latitude])
           .setPopup(new Mapbox.Popup().setHTML(popUpCard))
           .addTo(map)
+
         })
       }
-  }, [mapMarkersState])
-  
+  }, [mapMarkersState, weatherData])
 
+console.log(weatherData)
+  useEffect(() => {
+    //Fetch weather for every stop
+    if (!mapMarkersState) {
+      return;
+    }
+    mapMarkersState.map(i => {
+      fetch(`http://api.weatherstack.com/forecast?access_key=${weatherKey}&query=${i.metadata.weatherquery}`)
+      .then(response => response.json())
+      .then((data) => {
+        data.slug = i.slug
+        setWeatherData((state) => state.concat(data))
+
+      });
+    })
+    
+    
+  }, [mapMarkersState])
+
+console.log(weatherData)
   function renderSkeleton() {
     return (
       <SkeletonContainer />
@@ -126,12 +154,10 @@ function HomeContainer() {
 
   function renderPage() {
     return (
-      <Container>
+      <Container as="main">
         <PageTitle>Welcome</PageTitle>
         <HomeContent dangerouslySetInnerHTML={{__html: pageData.content}} />
-        <div className="mapContainer" style={{height: '500px'}} ref={mapElement}></div>
-        {/* {infoContent && <InfoContainer dangerouslySetInnerHTML={{__html: infoContent}} />} */}
-        
+        <div className="mapContainer" style={{height: '700px'}} ref={mapElement}></div>
       </Container>
     )
   }
