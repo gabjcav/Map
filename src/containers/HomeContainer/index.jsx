@@ -107,10 +107,11 @@ function HomeContainer() {
 					<div class="popup-card">
             <h2>${item.title}</h2>
             <p>${item.content}</p>
-            <img src=${item.metadata.infoimage.imgix_url}/>
-            <div class"weather-container">
-              <h3>Current Weather (${weather?.location?.name})</h3>
+            <img src=${item.metadata.infoimage.imgix_url}>
+            <h3>Current Weather (${weather?.location?.name})</h3>
+            <div class="weather-container">
               <p class="weather-temp">${weather?.current?.temperature}°c</p>
+              <img class="weather-img" src=${weather?.current?.weather_icons}>
               <p class="weather-desc">${weather?.current?.weather_descriptions}</p>
             </div>  
 					</div>`
@@ -146,6 +147,7 @@ console.log(weatherData)
   }, [mapMarkersState])
 
 console.log(weatherData)
+
   function renderSkeleton() {
     return (
       <SkeletonContainer />
