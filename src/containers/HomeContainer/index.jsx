@@ -70,7 +70,9 @@ function HomeContainer() {
         zoom: 1,
         style: style
       })
+     
     };
+    // map.addControl(new mapboxgl.NavigationControl());
   }, [pageData]);
 
 
@@ -97,6 +99,13 @@ function HomeContainer() {
           let selectedStop = el.getAttribute('data-name');
           let stopToPass = mapMarkersState.find((el) => el.title === selectedStop);
           setStop(stopToPass);
+          map.flyTo(
+            {center: 
+              [
+              item.metadata.longitude,
+              item.metadata.latitude
+            ], 
+              zoom:4});
         })
 
         setInfoContent(item.content)
@@ -107,13 +116,14 @@ function HomeContainer() {
 					<div class="popup-card">
             <h2>${item.title}</h2>
             <p>${item.content}</p>
-            <img src=${item.metadata.infoimage.imgix_url}>
+            <img src=${item.metadata.infoimage.imgix_url} alt=${item.metadata.infoimagealt}>
             <h3>Current Weather (${weather?.location?.name})</h3>
             <div class="weather-container">
               <p class="weather-temp">${weather?.current?.temperature}°c</p>
               <img class="weather-img" src=${weather?.current?.weather_icons}>
               <p class="weather-desc">${weather?.current?.weather_descriptions}</p>
-            </div>  
+            </div>
+            <p class="weather-update">Last updated: ${weather?.current?.observation_time}</p>  
 					</div>`
 
         new Mapbox.Marker(el, {
@@ -122,8 +132,9 @@ function HomeContainer() {
           .setLngLat([item.metadata.longitude, item.metadata.latitude])
           .setPopup(new Mapbox.Popup().setHTML(popUpCard))
           .addTo(map)
-
+          
         })
+        
       }
   }, [mapMarkersState, weatherData])
 

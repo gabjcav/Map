@@ -27,10 +27,6 @@ const GlobalStyle = createGlobalStyle`
         max-width: 100%; 
     }
 
-    .mapContainer{
-        width: 1500px;
-        margin: 0 auto;
-    }
 
     .mapboxgl-canary{
         visibility: visible; 
@@ -49,7 +45,10 @@ const GlobalStyle = createGlobalStyle`
             font-size: 18px;
         }
         p{
-            font-size: 16px;
+            font-size: 14px;
+        }
+        .weather-update{
+            font-size: 10px;
         }
     }
       
@@ -59,16 +58,18 @@ const GlobalStyle = createGlobalStyle`
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         font-weight: 500;
-
+        background-color: whitesmoke;
         img, p{
             padding: 5px;
             text-align: center;
+            font-size:16px;
         }
 
         .weather-img{
             border-radius: 50%;
         }
 
+        
     }
 
     
