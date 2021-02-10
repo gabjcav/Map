@@ -1,19 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Cosmic from 'cosmicjs';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
-import Mapbox, { accessToken } from 'mapbox-gl';
+import Mapbox from 'mapbox-gl';
 import PageTitle from '../../components/PageTitle';
 import Container from '../../components/Container';
 import SkeletonContainer from '../SkeletonContainer';
-import InfoContainer from '../../components/InfoContainer';
 import HomeContent from '../../components/HomeContent';
-import WeatherContainer from '../../components/WeatherContainer';
+
 let map = null; 
-let marker = null;
+
 let weatherKey = process.env.WEATHERSTACK_API_KEY;
 function HomeContainer() {
   const mapElement = useRef(null);
@@ -69,10 +63,12 @@ function HomeContainer() {
         center: [10.381198, 59.748947],
         zoom: 1,
         style: style
+      }).on('Load', () => {
+        map.addControl(new Mapbox.NavigationControl());
       })
-     
+      
     };
-    // map.addControl(new mapboxgl.NavigationControl());
+    
   }, [pageData]);
 
 
@@ -102,10 +98,11 @@ function HomeContainer() {
           map.flyTo(
             {center: 
               [
-              item.metadata.longitude,
-              item.metadata.latitude
-            ], 
-              zoom:4});
+                item.metadata.longitude,
+                item.metadata.latitude
+              ], 
+                zoom:2
+            });
         })
 
         setInfoContent(item.content)
@@ -117,12 +114,13 @@ function HomeContainer() {
             <h2>${item.title}</h2>
             <p>${item.content}</p>
             <img src=${item.metadata.infoimage.imgix_url} alt=${item.metadata.infoimagealt}>
-            <h3>Current Weather (${weather?.location?.name})</h3>
+            <h3>Current weather in ${weather?.location?.name}</h3>
             <div class="weather-container">
               <p class="weather-temp">${weather?.current?.temperature}°c</p>
               <img class="weather-img" src=${weather?.current?.weather_icons}>
               <p class="weather-desc">${weather?.current?.weather_descriptions}</p>
             </div>
+            <p class="local-time">Local time: ${weather?.location?.localtime}
             <p class="weather-update">Last updated: ${weather?.current?.observation_time}</p>  
 					</div>`
 
@@ -138,12 +136,15 @@ function HomeContainer() {
       }
   }, [mapMarkersState, weatherData])
 
-console.log(weatherData)
+  //Fetch weather for every stop
   useEffect(() => {
-    //Fetch weather for every stop
+    
+
     if (!mapMarkersState) {
       return;
     }
+
+    //Use slug from cosmic to get the correct weather for each location
     mapMarkersState.map(i => {
       fetch(`http://api.weatherstack.com/forecast?access_key=${weatherKey}&query=${i.metadata.weatherquery}`)
       .then(response => response.json())
@@ -164,6 +165,7 @@ console.log(weatherData)
       <SkeletonContainer />
     );
   }
+  
 
   function renderPage() {
     return (
