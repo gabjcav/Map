@@ -10,9 +10,11 @@ const GlobalStyle = createGlobalStyle`
         width: 100%; 
         margin: 0 auto;
         padding: 0;
-        background-color: #000000; 
+        background-color: #222630; 
         
     }
+
+
 
     html {
         font-size: 20px; 
@@ -26,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
     img{
         max-width: 100%; 
     }
+
 
 
     .mapboxgl-canary{
@@ -51,7 +54,14 @@ const GlobalStyle = createGlobalStyle`
             font-size: 10px;
         }
     }
-      
+
+    .mapboxgl-popup-content {
+    overflow-y: scroll;
+       max-height: 500px;
+       width: 500px;
+
+    }
+
     .weather-container{
         font-size:10px;
         padding: 4px;
@@ -69,7 +79,9 @@ const GlobalStyle = createGlobalStyle`
             border-radius: 50%;
         }
 
-        
+        .localtime{
+            font-size: 10px;
+        }
     }
 
     
