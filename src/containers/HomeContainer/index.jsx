@@ -9,6 +9,7 @@ import HomeContent from '../../components/HomeContent';
 let map = null; 
 
 let weatherKey = process.env.WEATHERSTACK_API_KEY;
+
 function HomeContainer() {
   const mapElement = useRef(null);
   Mapbox.accessToken = process.env.MAPBOX_API_KEY;
@@ -158,7 +159,6 @@ function HomeContainer() {
     
   }, [mapMarkersState])
 
-console.log(weatherData)
 
   function renderSkeleton() {
     return (

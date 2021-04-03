@@ -1,13 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Cosmic from 'cosmicjs';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
-import GlobalStyle from './components/GlobalStyle';
-import HomeContainer from './containers/HomeContainer';
-// import StopListContainer from './containers/StopListContainer';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import GlobalStyle from "./components/GlobalStyle";
+import HomeContainer from "./containers/HomeContainer";
 
 function App() {
   return (
@@ -17,10 +11,9 @@ function App() {
         <Switch>
           <Route path="/" component={HomeContainer} />
         </Switch>
-        
       </Router>
     </>
-  )
-};
+  );
+}
 
 export default App;
