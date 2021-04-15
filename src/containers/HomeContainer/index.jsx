@@ -140,12 +140,15 @@ function HomeContainer() {
     //Use slug from cosmic to get the correct weather for each location
     mapMarkersState.map((i) => {
       fetch(
-        `http://api.weatherstack.com/forecast?access_key=${weatherKey}&query=${i.metadata.weatherquery}`
+        `https://api.weatherstack.com/forecast?access_key=${weatherKey}&query=${i.metadata.weatherquery}`
       )
         .then((response) => response.json())
         .then((data) => {
           data.slug = i.slug;
           setWeatherData((state) => state.concat(data));
+        })
+        .catch((error) => {
+          console.log(error);
         });
     });
   }, [mapMarkersState]);
