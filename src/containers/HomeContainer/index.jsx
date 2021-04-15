@@ -136,7 +136,7 @@ function HomeContainer() {
     if (!mapMarkersState) {
       return;
     }
-
+    //
     //Use slug from cosmic to get the correct weather for each location
     mapMarkersState.map((i) => {
       fetch(
