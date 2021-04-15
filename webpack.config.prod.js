@@ -14,7 +14,8 @@ module.exports = () => {
     devtool: 'source-map',
     plugins: [
       new Dotenv({
-        path: './.production.env'
+        path: './.production.env',
+        systemvars: true
       }),
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
